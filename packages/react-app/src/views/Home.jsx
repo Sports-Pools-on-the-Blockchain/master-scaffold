@@ -1,10 +1,7 @@
-import { useContractReader } from "eth-hooks";
-import { ethers } from "ethers";
-import React from "react";
-import { Link } from "react-router-dom";
-import { VStack, HStack, useRadioGroup, RadioGroup } from "@chakra-ui/react";
-import RadioCard from "../components/RadioCard";
-import Matchup from "../components/Matchup";
+import React, { useEffect, useState } from "react";
+import { VStack } from "@chakra-ui/react";
+import Event from "../components/Event";
+import axios from "axios";
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
  * @param {*} yourLocalBalance balance on current network
@@ -12,22 +9,34 @@ import Matchup from "../components/Matchup";
  * @returns react component
  **/
 function Home({ yourLocalBalance, readContracts }) {
-  // you can also use hooks locally in your component of choice
-  // in this case, let's keep track of 'purpose' variable from our contract
-  // const purpose = useContractReader(readContracts, "YourContract", "purpose");
+  const [eventsList, setEventsList] = useState([]);
 
-  const options = [
-    ["Grizzlies", "Warriors"],
-    ["Celtics", "Bucks"],
-  ];
+  useEffect(() => {
+    async function getUpcomingGames() {
+      const today = new Date(Date.now()).toISOString().substring(0, 10);
 
+      const options = {
+        method: "GET",
+        url: `https://therundown-therundown-v1.p.rapidapi.com/sports/4/events/${today}`,
+        params: { include: "scores", offset: "300" },
+        headers: {
+          "X-RapidAPI-Host": "therundown-therundown-v1.p.rapidapi.com",
+          "X-RapidAPI-Key": process.env.REACT_APP_RAPIDAPI_KEY,
+        },
+      };
+      console.log("MAKING AXIOS CALL");
+      const response = await axios.request(options);
+      console.log("EVENTS OBJECT: ", response.data.events);
+      setEventsList(response.data.events);
+    }
+    getUpcomingGames();
+  }, []);
   return (
     <VStack>
-      {options.map(matchup => {
-        return <Matchup matchup={matchup} />;
+      {eventsList.map(event => {
+        return <Event event={event} />;
       })}
     </VStack>
   );
 }
-
 export default Home;

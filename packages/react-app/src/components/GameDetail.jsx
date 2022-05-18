@@ -2,13 +2,23 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, HStack, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { Spinner, Center, Box } from "@chakra-ui/react";
+import {
+  Spinner,
+  Center,
+  Box,
+  FormControl,
+  NumberInputField,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputStepper,
+} from "@chakra-ui/react";
 import SquaresBoard from "./SquaresBoard";
 
 export default function GameDetail() {
   let { eventID } = useParams();
   const [eventData, setEventData] = useState({});
-
+  const [buyAmount, setBuyAmount] = useState(0);
   useEffect(() => {
     console.log("dev: UseEffect Fired");
     async function getGameById() {
@@ -35,6 +45,7 @@ export default function GameDetail() {
 
   const handleBuy = e => {
     e.preventDefault();
+    console.log("dev: ", buyAmount);
     //call smart contract here
   };
   if (Object.keys(eventData).length !== 0) {
@@ -54,7 +65,24 @@ export default function GameDetail() {
             </HStack>
           </Box>
         </Center>
-        <Button onClick={handleBuy}>Buy a Square</Button>
+        <Center>
+          <FormControl w={"20%"}>
+            {/* <FormLabel htmlFor="amount" textAlign={"center"}>
+              Amount
+            </FormLabel> */}
+            <NumberInput max={50} min={1} onChange={amt => setBuyAmount(amt)} defaultValue={0}>
+              <NumberInputField id="amount" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <Button onClick={handleBuy} mt={"10px"}>
+              Buy a Square (price?)
+            </Button>
+          </FormControl>
+        </Center>
+
         <SquaresBoard />
       </>
     );

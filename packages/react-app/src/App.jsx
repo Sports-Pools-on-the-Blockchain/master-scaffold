@@ -23,6 +23,7 @@ import {
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
+  GameDetail,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -281,6 +282,9 @@ function App(props) {
         <Route exact path="/">
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
+        </Route>
+        <Route exact path="/pool/:eventID">
+          <GameDetail address={address} yourLocalBalance={yourLocalBalance} mainnetProvider={mainnetProvider} />
         </Route>
         <Route exact path="/debug">
           {/*

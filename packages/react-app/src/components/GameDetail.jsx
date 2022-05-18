@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, HStack, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, Center, Box } from "@chakra-ui/react";
+import SquaresBoard from "./SquaresBoard";
 
 export default function GameDetail() {
   let { eventID } = useParams();
@@ -41,15 +42,20 @@ export default function GameDetail() {
     const [team1, team2] = eventData.teams;
     return (
       <>
-        <HStack>
-          <Text>{team1.is_away ? team1.name : team2.name}</Text>
-          <Text>
-            @<br />
-            {new Date(date).toDateString()}
-          </Text>
-          <Text>{team1.is_home ? team1.name : team2.name}</Text>
-        </HStack>
+        <Center p={4}>
+          <Box border={"2px"} p={1}>
+            <HStack>
+              <Text>{team1.is_away ? team1.name : team2.name}</Text>
+              <Text>
+                @<br />
+                {new Date(date).toDateString()}
+              </Text>
+              <Text>{team1.is_home ? team1.name : team2.name}</Text>
+            </HStack>
+          </Box>
+        </Center>
         <Button onClick={handleBuy}>Buy a Square</Button>
+        <SquaresBoard />
       </>
     );
   } else {
